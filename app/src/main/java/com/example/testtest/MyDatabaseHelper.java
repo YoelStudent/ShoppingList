@@ -19,6 +19,7 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "_id";
 
 
+
     MyDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
@@ -34,7 +35,6 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
     void addItem(String Name){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-
         cv.put(COLUMN_NAME, Name);
         long result = db.insert(TABLE_NAME,null, cv);
         if(result == -1){
@@ -73,6 +73,7 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
     void deleteOneRow(String row_id){
         SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(TABLE_NAME, "_id=?", new String[]{row_id});
+        Toast.makeText(context, row_id, Toast.LENGTH_SHORT).show();
         if(result == -1){
             Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
         }else{
@@ -94,7 +95,7 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
             return "-1";
         }
         cursor.moveToFirst();
-        return cursor.getString(0);
+        return cursor.getString(1);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {

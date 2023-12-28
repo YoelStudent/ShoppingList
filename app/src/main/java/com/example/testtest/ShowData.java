@@ -4,20 +4,26 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ShowData#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowData extends Fragment {
+public class ShowData extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +33,7 @@ public class ShowData extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ArrayList<Button> arrayList;
     TableLayout tableLayout;
     public ShowData() {
         // Required empty public constructor
@@ -66,27 +73,56 @@ public class ShowData extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_show_data, container, false);
         db = new MyDatabaseHelper(requireContext());
         tableLayout = view.findViewById(R.id.tbData);
+        tableLayout.removeAllViews();
+        ShowTableData();
+
 
 
         return view;
     }
-    public void ShowTableData(Cursor cursor)
+    public void ShowTableData()
     {
-        cursor = db.readAllData();
+        tableLayout.removeAllViews();
+        Cursor cursor = db.readAllData();
+        arrayList = new ArrayList<Button>();
         cursor.moveToFirst();
         int i = 0;
-        while (cursor.moveToNext())
+        while (!cursor.isAfterLast())
         {
-            String s = cursor.getString(i);
+            String s = cursor.getString(1);
+
             TableRow tableRow = new TableRow(requireContext());
             TextView textView = new TextView(requireContext());
             TextView textView1 = new TextView(requireContext());
+            Button btn = new Button(requireContext());
+            btn.setId(i);
+            btn.setOnClickListener(this);
+            btn.setHint("DELETE");
+            arrayList.add(btn);
             textView.setText(s);
-            textView1.setText(i);
             i++;
             tableRow.addView(textView);
             tableRow.addView(textView1);
+            tableRow.addView(btn);
             tableLayout.addView(tableRow);
+            cursor.moveToNext();
         }
+        db.close();
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        for (int i = 0; i < arrayList.size(); i++)
+        {
+            if (v== arrayList.get(i))
+            {
+                db.deleteOneRow(String.valueOf(i));
+                ShowTableData();
+            }
+        }
+
+
+
     }
 }

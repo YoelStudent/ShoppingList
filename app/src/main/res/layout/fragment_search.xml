@@ -45,13 +45,6 @@
         android:layout_marginLeft="250dp"
         android:hint="Delete"
         android:id="@+id/btnDelete"></Button>
-    <Button
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="150dp"
-        android:gravity="center"
-        android:layout_marginLeft="150dp"
-        android:hint="Create"
-        android:id="@+id/btnCreate"></Button>
+
 
 </FrameLayout>
